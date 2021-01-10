@@ -1,26 +1,26 @@
-# Devops SQL test
+# DevOps SQL test
 
 ## Introduction
 
-A SQL data base taakes time to resolve queries and in some point the app breakes
+An SQL database takes time to resolve queries and at some point the app brakes
 
-## Requisits
+## Requisites
 
 Linux SO
 SQL database
 Go script
 
-## Installation of enviroement
+## Installation of environment
 
-For the propouse of this test I use a Ec2  Ubuntu 20.04 server runing on AWS
+For the proposal of this test I use an Ec2  Ubuntu 20.04 server running on AWS
 
-Databa Base Installation :
+Database Base Installation :
 
-[Follw this tutorial](https://www.digitalocean.com/community/tutorials/how-to-install-mariadb-on-ubuntu-20-04)
+[Follow this tutorial](https://www.digitalocean.com/community/tutorials/how-to-install-mariadb-on-ubuntu-20-04)
 
 ## Instructions:
 
- **Create adata base called "devops"**
+ **Create a database called "devops"**
 
 ```
 CREATE DATABASE devops;
@@ -56,26 +56,26 @@ CREATE DATABASE devops;
     
     curl -LJO https://raw.githubusercontent.com/datacharmer/test_db/master/load_employees.dump
 
-**Import the dada in the devops data base**
+**Import the Dada in the devops database**
 
     mysql -u admin -p devops < /home/ubuntu/load_salaries1.dump
 
-**Create a new data base user **senior** and password: **erplysdv** with read only acces**
+**Create a new database user **senior** and password: **erplysdv** with read only access**
 
     CREATE USER 'user_readonly'@'localhost' IDENTIFIED BY 'secret_password';
     GRANT SELECT ON my_database.* TO 'user_readonly'@'localhost';
     FLUSH PRIVILEGES;
 
 
-**Download the following go code to test the data base**
+**Download the following go code to test the database**
 
     **curl -LJO https://raw.githubusercontent.com/diiegg/devop-test/main/test.go**
 
-**Donwload the golang [MySQL driver](https://github.com/go-sql-driver/mysql) and install it** 
+**Download the Golang [MySQL driver](https://github.com/go-sql-driver/mysql) and install it** 
 
 
 
-**Run te script**
+**Run the script**
 
 
     go run test.go
@@ -90,37 +90,37 @@ You should get something like this:
 
 Open developer tools on your web browser and go into the network tab, refresh the website
 
-Every time you refrsh the website the reques time is taking long and long. Whats is going on there ?
+Every time you refresh the website the request time is taking long and long. What is going on there ?
 
 ![enter image description here](https://user-images.githubusercontent.com/12648295/104135120-d852e880-5385-11eb-9fbb-eeb4fa13692a.jpg)
 
 
 ## Solution
 
-After inspecting the petitions  i came across withh a RAND on the petition 15 that was sending a lot of rows and the data base was not able to order quicly that petitons
+After inspecting the petitions  I came across with a RAND on the petition 15 that was sending a lot of rows and the database was not able to order quickly that petitions
 
 ![enter image description here](https://user-images.githubusercontent.com/12648295/104135099-b5c0cf80-5385-11eb-8ac3-9c01de1d3c4e.jpg)
 
 
-My solution was create a index in the tables "salaries" and "employees" on the row "emp_no" geting a 32 ms response time
+My solution was to create an index in the tables "salaries" and "employees" on the row "emp_no" getting a 32 ms response time
 
 ![enter image description here](https://user-images.githubusercontent.com/12648295/104135056-827e4080-5385-11eb-9827-d5a2ab6ab56d.jpg)
 
 ###  Create a index
 
-**Long in into SQL and select devops data base**
+**Long in into SQL and select DevOps database**
 
     CREATE INDEX index_emp_no ON salaries(emp_no);
     CREATE INDEX index_emp_no ON employees(emp_no);
 
 
-Run the go script again and test the data base
+Run the go script again and test the database
 
-## Recomendations
+## Recommendations
 
 **[MySQLTuner](https://github.com/major/MySQLTuner-perl)** is a script written in Perl that allows you to review a MySQL installation quickly and make adjustments to increase performance and stability.
 
-Monitor your database with [prometheus and grafana](https://medium.com/schkn/complete-mysql-dashboard-with-grafana-prometheus-36e98cba1390) 
+Monitor your database with [Prometheus and Grafana](https://medium.com/schkn/complete-mysql-dashboard-with-grafana-prometheus-36e98cba1390) 
 
 [Golang MySQL Tutorial](https://tutorialedge.net/golang/golang-mysql-tutorial/)
 
